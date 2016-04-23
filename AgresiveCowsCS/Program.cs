@@ -4,8 +4,6 @@ using System.Linq;
 
 namespace AgresiveCowsCS
 {
-    
-
     class Program {
         public struct Distance {
             public long dist;
@@ -24,7 +22,7 @@ namespace AgresiveCowsCS
             }
         }
 
-        static void Main(string[] args) {
+        static void Main() {
             try {
                 var t = long.Parse(Console.ReadLine());
                 for (int i = 0; i < t; i++) {
@@ -40,10 +38,11 @@ namespace AgresiveCowsCS
                     var distances1 = new List<Distance>();
                     IList<long[]> result = new List<long[]>();
 
-                    foreach (var stall1 in stallsLocations) {
-                        foreach (var stall2 in stallsLocations) {
-                            if (stall2 - stall1 > 0)
-                                distances1.Add(new Distance(stall2 - stall1, stall1, stall2));
+                    for (int j = 0; j < stallsLocations.Length; j++)
+                    {
+                        for (int k = j+1; k < stallsLocations.Length; k++)
+                        {
+                            distances1.Add(new Distance(stallsLocations[k] - stallsLocations[j], stallsLocations[j], stallsLocations[k]));
                         }
                     }
 
@@ -52,25 +51,18 @@ namespace AgresiveCowsCS
                     var intervals = new long[intervalsNumber];
                     var lenth = distances.Length;
                     for (int k = 0; k < lenth; k++) {
+
                         if (counter == intervalsNumber) {
                             result.Add((long[])intervals.Clone());
                         }
-                        var tempDist = distances[k].dist;
                         counter = 1;
-
 
                         intervals[counter - 1] = distances[k].dist;
 
                         for (int l = k + 1; l < lenth; l++) {
-                            if (!distances[k].overlap(distances[l])) {
-                                if (counter < intervalsNumber) {
-                                    if (distances[l].dist < tempDist) {
-                                        counter++;
-                                        tempDist = distances[l].dist;
-                                        intervals[counter - 1] = distances[l].dist;
-                                    }
-                                }
-                            }
+                            if (distances[k].overlap(distances[l]) || counter >= intervalsNumber) continue;
+                            counter++;
+                            intervals[counter - 1] = distances[l].dist;
                         }
                     }
 
@@ -78,8 +70,8 @@ namespace AgresiveCowsCS
                     Console.WriteLine(max);
                 }
             }
-            catch {
-                return;
+            catch{
+                // ignored
             }
         }
     }
