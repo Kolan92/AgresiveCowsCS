@@ -21,7 +21,7 @@ namespace AgresiveCowsCS
             var result = Math.Max(start, distance.start) < Math.Min(end, distance.end);
             return result;
         }
-
+        //
         public object Clone() {
             return this.MemberwiseClone();
         }
